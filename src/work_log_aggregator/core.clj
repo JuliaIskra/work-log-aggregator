@@ -11,17 +11,21 @@
 (defn parse-entry
   [entry-str]
   (let [lines (clojure.string/split entry-str #"[\r\n]+")]
-    {:start-date (parse-date (get lines 0))
-     :end-date   (parse-date (get lines 2))
-     :task       (clojure.string/trim (get lines 1))}))
+    {:start-datetime (parse-date (get lines 0))
+     :end-datetime   (parse-date (get lines 2))
+     :task           (clojure.string/trim (get lines 1))}))
 
 (defn read-entries
   [filename]
   (map parse-entry (clojure.string/split (slurp filename) #"[\r\n]+ [\r\n]+")))
 
+(defn get-entry-day
+  [entry]
+  (.toDateMidnight (get entry :start-datetime)))
+
 (defn aggregate-by-date-task
   [entries]
-  entries)
+  (sort-by first (group-by get-entry-day entries)))
 
 (defn -main
   [filename & args]
