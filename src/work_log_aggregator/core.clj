@@ -21,11 +21,18 @@
 
 (defn get-entry-day
   [entry]
-  (.toDateMidnight (get entry :start-datetime)))
+  (.toDateMidnight (entry :start-datetime)))
+
+(defn group-by-task
+  [entries]
+  (group-by :task entries))
 
 (defn aggregate-by-date-task
   [entries]
-  (sort-by first (group-by get-entry-day entries)))
+  (sort-by first
+    (map
+      (fn [[date group]] [date (group-by-task group)])
+      (group-by get-entry-day entries))))
 
 (defn -main
   [filename & args]
