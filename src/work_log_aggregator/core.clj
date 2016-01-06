@@ -27,12 +27,17 @@
   [entries]
   (group-by :task entries))
 
+(defn map-second
+  "Maps second element in a sequence of pairs"
+  [f coll]
+  (map (fn [[first second]] [first (f second)]) coll))
+
 (defn aggregate-by-date-task
   [entries]
-  (sort-by first
-    (map
-      (fn [[date group]] [date (group-by-task group)])
-      (group-by get-entry-day entries))))
+  (->> entries
+      (group-by get-entry-day)
+      (map-second group-by-task)
+      (sort-by first)))
 
 (defn -main
   [filename & args]
