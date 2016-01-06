@@ -1,6 +1,6 @@
 (ns work-log-aggregator.core
   (:gen-class)
-  ;(:require '[clj-time.core :as t])
+  (:require [clj-time.core :as t])
   (:require [clj-time.format :as f])
   (:use clojure.pprint))
 
@@ -27,6 +27,14 @@
   [entries]
   (group-by :task entries))
 
+(defn get-entry-interval
+  [entry]
+  (.toPeriod (t/interval (entry :start-datetime) (entry :end-datetime))))
+
+(defn sum-hours
+  [entries]
+  (reduce #(.plus %1 %2) (map get-entry-interval entries)))
+
 (defn map-second
   "Maps second element in a sequence of pairs"
   [f coll]
@@ -35,9 +43,9 @@
 (defn aggregate-by-date-task
   [entries]
   (->> entries
-      (group-by get-entry-day)
-      (map-second group-by-task)
-      (sort-by first)))
+       (group-by get-entry-day)
+       (map-second (comp (partial map-second sum-hours) group-by-task))
+       (sort-by first)))
 
 (defn -main
   [filename & args]
