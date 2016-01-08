@@ -2,7 +2,8 @@
   (:gen-class)
   (:require [clj-time.core :as t])
   (:require [clj-time.format :as f])
-  (:use clojure.pprint))
+  (:use clojure.pprint)
+  (:import (org.joda.time.format PeriodFormat)))
 
 (defn parse-date
   [date-str]
@@ -44,9 +45,35 @@
   [entries]
   (->> entries
        (group-by get-entry-day)
-       (map-second (comp (partial map-second sum-hours) group-by-task))
+       (map-second #(->> %1 group-by-task (map-second sum-hours)))
        (sort-by first)))
+
+(defn format-task-period
+  [[task period]]
+  (str
+    task
+    " - "
+    (.print (PeriodFormat/getDefault) (.normalizedStandard period))))
+
+(defn format-entries
+  [entries]
+  (clojure.string/join "\n" (map format-task-period entries)))
+
+(defn format-aggregated-entries
+  [aggregated-entries]
+  (clojure.string/join "\n\n"
+     (map
+       (fn [[day entries]]
+         (str
+           (f/unparse (f/formatters :date) day)
+           "\n"
+           (format-entries entries)))
+       aggregated-entries)))
+
+(defn print-hours
+  [aggregated-entries]
+  (println (format-aggregated-entries aggregated-entries)))
 
 (defn -main
   [filename & args]
-  (-> filename read-entries aggregate-by-date-task pprint))
+  (-> filename read-entries aggregate-by-date-task print-hours))
