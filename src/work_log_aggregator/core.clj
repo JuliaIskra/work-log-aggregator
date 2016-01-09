@@ -4,7 +4,7 @@
   (:require [clj-time.format :as f])
   (:require [clojure.string :as s])
   (:import (org.joda.time.format PeriodFormat))
-  (:import (org.joda.time DateTime Period)))
+  (:import (org.joda.time DateTime Duration)))
 
 
 (defn map-second
@@ -21,9 +21,9 @@
   [^Entry entry]
   (.toDateMidnight (:start-datetime entry)))
 
-(defn get-entry-interval
+(defn get-entry-duration
   [entry]
-  (.toPeriod (t/interval (:start-datetime entry) (:end-datetime entry))))
+  (.toDuration (t/interval (:start-datetime entry) (:end-datetime entry))))
 
 (defn group-by-task
   [entries]
@@ -31,13 +31,17 @@
 
 (defn sum-hours
   [entries]
-  (reduce #(.plus %1 %2) (map get-entry-interval entries)))
+  (reduce #(.plus %1 %2) (map get-entry-duration entries)))
 
 (defn aggregate-by-date-task
   [entries]
   (->> entries
        (group-by get-entry-day)
-       (map-second #(->> %1 group-by-task (map-second sum-hours)))
+       (map-second (fn [e]
+                     (->> e
+                          group-by-task
+                          (map-second sum-hours)
+                          (sort-by second #(compare %2 %1)))))
        (sort-by first)))
 
 
@@ -57,12 +61,12 @@
   (map parse-entry (s/split (slurp filename) #"[\r\n]+ [\r\n]+")))
 
 
-(defn format-task-period
-  [[task ^Period period]]
+(defn format-task-duration
+  [[task ^Duration duration]]
   (str
     task
     " - "
-    (.print (PeriodFormat/getDefault) (.normalizedStandard period))))
+    (.print (PeriodFormat/getDefault) (.toPeriod duration))))
 
 (defn format-aggregated-entries
   [aggregated-entries]
@@ -73,7 +77,7 @@
         (str
           (f/unparse (f/formatters :date) day)
           "\n"
-          (s/join "\n" (map format-task-period entries))))
+          (s/join "\n" (map format-task-duration entries))))
       aggregated-entries)))
 
 
