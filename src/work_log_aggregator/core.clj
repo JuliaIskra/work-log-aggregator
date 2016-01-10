@@ -1,5 +1,5 @@
-(ns work-log-aggregator.core
-  (:gen-class)
+(ns work_log_aggregator.core
+  (:gen-class :main true)
   (:require [clj-time.core :as t])
   (:require [clj-time.format :as f])
   (:require [clojure.string :as s])

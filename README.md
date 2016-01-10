@@ -1,4 +1,4 @@
-# work-log-aggregator
+# work_log_aggregator
 
 FIXME: description
 
@@ -10,7 +10,7 @@ Download from http://example.com/FIXME.
 
 FIXME: explanation
 
-    $ java -jar work-log-aggregator-0.1.0-standalone.jar [args]
+    $ java -jar work_log_aggregator-0.1.0-standalone.jar [args]
 
 ## Options
 
