@@ -33,6 +33,10 @@
   [entries]
   (reduce #(.plus %1 %2) (map get-entry-duration entries)))
 
+(defn total-sum
+  [entries]
+  (conj entries ["total" (reduce #(.plus %1 %2) (map second entries))]))
+
 (defn aggregate-by-date-task
   [entries]
   (->> entries
@@ -41,6 +45,7 @@
                      (->> e
                           group-by-task
                           (map-second sum-hours)
+                          total-sum
                           (sort-by second #(compare %2 %1)))))
        (sort-by first)))
 
