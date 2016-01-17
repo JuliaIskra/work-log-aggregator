@@ -1,4 +1,4 @@
-(defproject work_log_aggregator "0.3.0-SNAPSHOT"
+(defproject work_log_aggregator "0.2.1"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
