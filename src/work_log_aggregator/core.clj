@@ -55,16 +55,18 @@
   (f/parse (f/formatter "yyyy-MM-dd HH:mm") date-str))
 
 (defn parse-entry
-  [entry-str]
-  (let [[start task end] (s/split entry-str #"[\r\n]+")]
-    (map->Entry {:start-datetime (parse-date start)
-                 :end-datetime   (parse-date end)
-                 :task           (s/trim task)})))
+  [[start task end]]
+  (map->Entry {:start-datetime (parse-date start)
+               :end-datetime   (parse-date end)
+               :task           (s/trim task)}))
 
 (defn read-entries
-  [filename]
-  (map parse-entry (s/split (slurp filename) #"[\r\n]+ [\r\n]+")))
-
+  [reader]
+  (->> (line-seq reader)
+       (map s/trim)
+       (partition-by s/blank?)
+       (remove #(every? s/blank? %1))
+       (map parse-entry)))
 
 (defn format-task-duration
   [[task ^Duration duration]]
@@ -88,8 +90,9 @@
 
 (defn -main
   [filename]
-  (-> filename
-      read-entries
-      aggregate-by-date-task
-      format-aggregated-entries
-      println))
+  (with-open [reader (clojure.java.io/reader filename)]
+    (-> reader
+        read-entries
+        aggregate-by-date-task
+        format-aggregated-entries
+        println)))
