@@ -68,6 +68,7 @@
        (remove #(every? s/blank? %1))
        (map parse-entry)))
 
+
 (defn format-task-duration
   [[task ^Duration duration]]
   (str
@@ -77,16 +78,19 @@
 
 (defn format-aggregated-entries
   [aggregated-entries]
-  (s/join
-    "\n\n"
-    (map
-      (fn [[day entries]]
-        (str
-          (f/unparse (f/formatters :date) day)
-          "\n"
-          (s/join "\n" (map format-task-duration entries))))
-      aggregated-entries)))
+  (->> aggregated-entries
+       (map
+         (fn [[day entries]]
+           (cons
+             (f/unparse (f/formatters :date) day)
+             (map format-task-duration entries))))
+       (interpose "")
+       flatten))
 
+(defn print-seq
+  [coll]
+  (doseq [s coll]
+    (println s)))
 
 (defn -main
   [filename]
@@ -95,4 +99,4 @@
         read-entries
         aggregate-by-date-task
         format-aggregated-entries
-        println)))
+        print-seq)))
