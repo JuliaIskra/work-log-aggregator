@@ -1,36 +1,32 @@
-# work_log_aggregator
+# Work log aggregator
 
-FIXME: description
+Parses work log and generates output where you can see how much time did you
+spend doing tasks in a day in absolute hours and how much time did you spend
+doing them taking into account focus factor (the program calculates focus factor
+assuming that work day is 8 hours). Example files are in `dev-resources`.
 
-## Installation
+Sample output:
 
-Download from http://example.com/FIXME.
+    2015-12-30
+    total - 7 hours and 18 minutes (8 hours)
+    profiling - 4 hours and 38 minutes (5 hours and 4 minutes)
+    help Alena - 2 hours and 20 minutes (2 hours and 33 minutes)
+    mail - 20 minutes (21 minutes)
 
 ## Usage
 
-FIXME: explanation
+1. [Install leiningen](http://leiningen.org/#install).
+2. You can run the application from leiningen directly:
 
-    $ java -jar work_log_aggregator-0.1.0-standalone.jar [args]
 
-## Options
+    lein run input-filename
 
-FIXME: listing of options this app accepts.
+3. Or you can create standalone jar and run it as java application:
+
+
+    lein uberjar
+    java -jar target/uberjar/work_log_aggregator-0.3.0-standalone.jar input-filename
 
 ## Examples
 
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
-
-## License
-
-Copyright © 2016 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+    lein run dev-resources/input.txt

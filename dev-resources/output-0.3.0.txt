@@ -1,0 +1,18 @@
+2015-12-29
+total - 7 hours and 22 minutes (8 hours)
+profiling - 6 hours and 50 minutes (7 hours and 25 minutes)
+mail - 15 minutes (16 minutes)
+help other team - 14 minutes (15 minutes)
+work hours - 3 minutes (3 minutes)
+
+2015-12-30
+total - 7 hours and 18 minutes (8 hours)
+profiling - 4 hours and 38 minutes (5 hours and 4 minutes)
+help Alena - 2 hours and 20 minutes (2 hours and 33 minutes)
+mail - 20 minutes (21 minutes)
+
+2015-12-31
+total - 3 hours and 18 minutes (8 hours)
+help Alena - 1 hour and 16 minutes (3 hours and 4 minutes)
+performance test - 1 hour and 16 minutes (3 hours and 4 minutes)
+test refactoring - 46 minutes (1 hour and 51 minutes)
