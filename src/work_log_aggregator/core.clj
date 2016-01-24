@@ -1,10 +1,10 @@
 (ns work_log_aggregator.core
   (:gen-class :main true)
-  (:require [clj-time.core :as t])
-  (:require [clj-time.format :as f])
-  (:require [clojure.string :as s])
-  (:import (org.joda.time.format PeriodFormat))
-  (:import (org.joda.time DateTime Duration)))
+  (:require [clj-time.core :as t]
+            [clj-time.format :as f]
+            [clojure.string :as s])
+  (:import (org.joda.time.format PeriodFormat)
+           (org.joda.time DateTime Duration)))
 
 
 (defn map-second
@@ -40,6 +40,20 @@
   [entries]
   (conj entries ["total" (reduce #(.plus %1 %2) (map second entries))]))
 
+(defn calculate-focus-factor
+  "Calculates duration for each task taking into account focus factor"
+  [entries]
+  (let [total        (first entries)
+        day-duration (Duration/standardHours 8)
+        ff           (/
+                       (.getStandardMinutes (second total))
+                       (.getStandardMinutes day-duration))]
+    (map (fn [[task duration]]
+           [task
+            duration
+            (Duration/standardMinutes (/ (.getStandardMinutes duration) ff))])
+         entries)))
+
 (defn aggregate-by-date-task
   [entries]
   (->> entries
@@ -57,7 +71,8 @@
                           ; as another task
                           total-sum
                           ; sort by duration desc
-                          (sort-by second #(compare %2 %1)))))
+                          (sort-by second #(compare %2 %1))
+                          calculate-focus-factor)))
        ; sort by day
        (sort-by first)))
 
@@ -86,11 +101,14 @@
 
 
 (defn format-task-duration
-  [[task ^Duration duration]]
+  [[task ^Duration duration ^Duration ff-duration]]
   (str
     task
     " - "
-    (.print (PeriodFormat/getDefault) (.toPeriod duration))))
+    (.print (PeriodFormat/getDefault) (.toPeriod duration))
+    " ("
+    (.print (PeriodFormat/getDefault) (.toPeriod ff-duration))
+    ")"))
 
 (defn format-aggregated-entries
   [aggregated-entries]
