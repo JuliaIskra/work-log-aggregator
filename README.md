@@ -19,13 +19,13 @@ Sample output:
 2. You can run the application from leiningen directly:
 
 
-    lein run <input-filename>
+    lein run \<input-filename\>
 
 3. Or you can create a standalone jar and run it as a java application:
 
 
     lein uberjar
-    java -jar target/uberjar/work_log_aggregator-0.3.0-standalone.jar <input-filename>
+    java -jar target/uberjar/work_log_aggregator-0.3.0-standalone.jar \<input-filename\>
 
 ## Examples
 
