@@ -3,7 +3,7 @@
 Parses work log and generates output where you can see how much time did you
 spend doing tasks in a day in absolute hours and how much time did you spend
 doing them taking into account focus factor (the program calculates focus factor
-assuming that work day is 8 hours). Example files are in `dev-resources`.
+assuming that a work day is 8 hours). Example files are in `dev-resources`.
 
 Sample output:
 
@@ -19,13 +19,13 @@ Sample output:
 2. You can run the application from leiningen directly:
 
 
-    lein run input-filename
+    lein run <input-filename>
 
-3. Or you can create standalone jar and run it as java application:
+3. Or you can create a standalone jar and run it as a java application:
 
 
     lein uberjar
-    java -jar target/uberjar/work_log_aggregator-0.3.0-standalone.jar input-filename
+    java -jar target/uberjar/work_log_aggregator-0.3.0-standalone.jar <input-filename>
 
 ## Examples
 
