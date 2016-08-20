@@ -27,7 +27,7 @@ Sample output:
 
     lein run input-filename mode [count]
 
-4. Or you can create standalone jar and run it as java application:
+4. Or you can create a standalone jar and run it as a java application:
 
 
     lein uberjar
