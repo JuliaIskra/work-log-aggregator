@@ -74,6 +74,16 @@
        ; sort by day
        (sort-by first)))
 
+(defn aggregate-by-month-task
+  [entries]
+  )
+
+(defn aggregate-by
+  [mode entries]
+  (cond (= mode "d") (aggregate-by-date-task entries)
+        (= mode "m") (aggregate-by-month-task entries)
+        :else (throw (RuntimeException. (str "Unknown mode: " mode)))))
+
 
 (defn parse-date
   [date-str]
@@ -130,10 +140,20 @@
 
 
 (defn -main
-  [filename]
-  (with-open [reader (clojure.java.io/reader filename)]
-    (-> reader
-        read-entries
-        aggregate-by-date-task
-        format-aggregated-entries
-        print-seq)))
+  "Takes file with filename with input data to parse in mode (d -- days, m -- months)
+  and returns data for the last count days/months"
+  ([filename mode]
+   (with-open [reader (clojure.java.io/reader filename)]
+     (->> reader
+          read-entries
+          (aggregate-by mode)
+          format-aggregated-entries
+          print-seq)))
+  ([filename mode count]
+   (with-open [reader (clojure.java.io/reader filename)]
+     (->> reader
+          read-entries
+          (aggregate-by mode)
+          (take-last (read-string count))
+          format-aggregated-entries
+          print-seq))))
