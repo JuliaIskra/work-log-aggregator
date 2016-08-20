@@ -24,14 +24,12 @@ Sample output:
  - count -- optional argument, how many last aggregated entries to show, if not given, shows all entries 
 3. You can run the application from leiningen directly:
 
-
-    lein run input-filename mode [count]
+        lein run input-filename mode [count]
 
 4. Or you can create a standalone jar and run it as a java application:
 
-
-    lein uberjar
-    java -jar target/uberjar/work_log_aggregator-0.3.0-standalone.jar input-filename mode [count]
+        lein uberjar
+        java -jar target/uberjar/work_log_aggregator-0.3.0-standalone.jar input-filename mode [count]
 
 ## Examples
 
