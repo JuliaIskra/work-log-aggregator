@@ -19,9 +19,9 @@ Sample output:
 
 1. [Install leiningen](http://leiningen.org/#install).
 2. Program takes 2 or 3 arguments:
- - input-filename -- file with work log to parse
- - mode -- how data will be aggregated: d -- by day, m -- by month (m is not supported yet)
- - count -- optional argument, how many last aggregated entries to show, if not given, shows all entries 
+ - input-filename - file with work log to parse
+ - mode - how data will be aggregated: d - by day, m - by month (m is not supported yet)
+ - count - optional argument, how many last aggregated entries to show, if not given, all entries are shown
 3. You can run the application from leiningen directly:
 
         lein run input-filename mode [count]
