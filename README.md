@@ -16,11 +16,11 @@ For day mode:
 
     2016-07-29
     FF = 80%
-    total - 6 h 27 m (8 h 0 m)
+    total - 6 h 27 m (8 h)
     move task in section today - 4 h 20 m (5 h 22 m)
-    stand-up - 0 h 50 m (1 h 2 m)
-    teams breakfast - 0 h 40 m (0 h 49 m)
-    mail - 0 h 37 m (0 h 45 m)
+    stand-up - 50 m (1 h 2 m)
+    teams breakfast - 40 m (49 m)
+    mail - 37 m (45 m)
 
 For month mode:
 
@@ -30,8 +30,8 @@ For month mode:
     17% - support app fix (1 h 44 m)
     16% - teams breakfast (1 h 40 m)
     10% - stand-up (1 h 5 m)
-    6% - mail (0 h 37 m)
-    5% - today, timezones (0 h 33 m)
+    6% - mail (37 m)
+    5% - today, timezones (33 m)
 
 ## Usage
 

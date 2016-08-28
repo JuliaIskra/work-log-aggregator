@@ -5,7 +5,7 @@
             [clojure.string :as s])
   (:import (org.joda.time.format PeriodFormatterBuilder PeriodFormatter)
            (org.joda.time DateTime Duration)))
-
+; todo separate to different files
 
 (defn map-second
   "Maps second element in a sequence of pairs"
@@ -19,9 +19,9 @@
 
 (def ^PeriodFormatter formatter
   (-> (new PeriodFormatterBuilder)
-      .printZeroAlways
       .appendHours
-      (.appendSuffix " h ")
+      (.appendSuffix " h")
+      (.appendSeparator " ")
       .appendMinutes
       (.appendSuffix " m")
       .toFormatter))

@@ -4,8 +4,8 @@
 17% - support app fix (1 h 44 m)
 16% - teams breakfast (1 h 40 m)
 10% - stand-up (1 h 5 m)
-6% - mail (0 h 37 m)
-5% - today, timezones (0 h 33 m)
+6% - mail (37 m)
+5% - today, timezones (33 m)
 
 2016-08
 100% - total (12 h 24 m)
@@ -15,4 +15,4 @@
 11% - stand-up (1 h 26 m)
 10% - global orientation for newcomers (1 h 15 m)
 9% - registration via third-party resources (1 h 8 m)
-1% - report (0 h 9 m)
+1% - report (9 m)
