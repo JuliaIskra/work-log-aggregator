@@ -5,7 +5,6 @@
             [clojure.string :as s])
   (:import (org.joda.time.format PeriodFormatterBuilder PeriodFormatter)
            (org.joda.time DateTime Duration)))
-; todo separate to different files
 
 (defn map-second
   "Maps second element in a sequence of pairs"
@@ -67,6 +66,7 @@
    duration
    (Duration/standardMinutes (/ (.getStandardMinutes duration) ff))])
 
+; todo try to merge functions aggregate-by-*-task
 (defn aggregate-by-date-task
   [entries]
   (->> entries
@@ -146,22 +146,17 @@
 
 (defn format-task-duration-with-ff
   [[task ^Duration duration ^Duration ff-duration]]
-  (str
-    task
-    " - "
-    (.print formatter (.toPeriod duration))
-    " ("
-    (.print formatter (.toPeriod ff-duration))
-    ")"))
+  (str task " - " (.print formatter (.toPeriod duration)) " (" (.print formatter (.toPeriod ff-duration)) ")"))
 
 (defn format-task-duration-with-percents
   [[task ^Duration duration percents]]
-  (str (int (* percents 100)) "% - " task " ("(.print formatter (.toPeriod duration)) ")"))
+  (str (int (* percents 100)) "% - " task " (" (.print formatter (.toPeriod duration)) ")"))
 
+; todo remove ff
 (defn format-ff
   [ff]
   (str "FF = " (int (* 100 ff)) "%"))
-
+; todo try to merge these two functions
 (defn format-day-tasks
   [aggregated-entries]
   (->> aggregated-entries
@@ -183,6 +178,7 @@
        (interpose "")
        flatten))
 
+; todo check mode once
 (defn format-aggregated-entries
   [mode aggregated-entries]
   (cond (= mode "d") (format-day-tasks aggregated-entries)
@@ -194,22 +190,21 @@
   (doseq [s coll]
     (println s)))
 
+(defn take-last-if-specified
+  [count coll]
+  (if count
+    (take-last (read-string count) coll)
+    coll))
+
 
 (defn -main
   "Takes file with filename with input data to parse in mode (d -- days, m -- months)
   and returns data for the last count days/months"
-  ([filename mode]
+  ([filename mode & [count]]
    (with-open [reader (clojure.java.io/reader filename)]
      (->> reader
           read-entries
           (aggregate-by mode)
-          (format-aggregated-entries mode)
-          print-seq)))
-  ([filename mode count]
-   (with-open [reader (clojure.java.io/reader filename)]
-     (->> reader
-          read-entries
-          (aggregate-by mode)
-          (take-last (read-string count))
+          (take-last-if-specified count)
           (format-aggregated-entries mode)
           print-seq))))
