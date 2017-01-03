@@ -26,31 +26,30 @@
       .toFormatter))
 
 
-(defn entry-day
+(defn get-entry-day
   [^Entry entry]
   (f/unparse (f/formatters :date) (.toDateMidnight (:start-datetime entry))))
 
-(defn entry-month
+(defn get-entry-month
   [^Entry entry]
   (f/unparse (f/formatters :year-month) (:start-datetime entry)))
 
-(defn entry-duration
-  [entry]
+(defn calculate-entry-duration
+  [^Entry entry]
   (.toDuration (t/interval (:start-datetime entry) (:end-datetime entry))))
 
 (defn group-by-task
   [entries]
   (group-by :task entries))
 
-(defn sum-hours
+(defn sum-durations
+  [durations]
+  (reduce #(.plus %1 %2) durations))
+
+(defn calculate-entries-total-duration
   "Calculates total duration of all entries in passed sequence"
   [entries]
-  (reduce #(.plus %1 %2) (map entry-duration entries)))
-
-(defn total-duration
-  "Calculates total duration of all entries"
-  [entries]
-  (reduce #(.plus %1 %2) (map second entries)))
+  (sum-durations (map calculate-entry-duration entries)))
 
 (defn calculate-ff
   [total-time]
@@ -69,21 +68,20 @@
 (defn aggregate-by-date-task
   [entries]
   (->> entries
-       (group-by entry-day)
+       (group-by get-entry-day)
        (map (fn [[day entries]]
-              (let [tasks          (->> entries
-                                        ; returns sequence of (task sequnce-of-entries)
-                                        group-by-task
-                                        ; sum hours for every task
-                                        ; after this we have sequence of (task duration)
-                                        (map-second sum-hours)
-                                        ; sort by duration in reverse order
-                                        (sort-by second #(compare %2 %1)))
-                    total-time     (total-duration tasks)
-                    ff             (calculate-ff total-time)
-                    tasks-ff-total (->> tasks
-                                        (cons ["total" total-time])
-                                        (map (partial add-ff-duration ff)))]
+              (let [task-duration-pairs (->> entries
+                                             ; returns sequence of (task entries)
+                                             group-by-task
+                                             ; returns sequence of (task duration)
+                                             (map-second calculate-entries-total-duration)
+                                             ; sort by duration in reverse order
+                                             (sort-by second #(compare %2 %1)))
+                    total-time          (sum-durations (map second task-duration-pairs))
+                    ff                  (calculate-ff total-time)
+                    tasks-ff-total      (->> task-duration-pairs
+                                             (cons ["total" total-time])
+                                             (map (partial add-ff-duration ff)))]
                 [day ff tasks-ff-total])))
        ; sort by day
        (sort-by first)))
@@ -96,20 +94,19 @@
 (defn aggregate-by-month-task
   [entries]
   (->> entries
-       (group-by entry-month)
+       (group-by get-entry-month)
        (map (fn [[month entries]]
-              (let [tasks       (->> entries
-                                     ; returns sequence of (task sequnce-of-entries)
-                                     group-by-task
-                                     ; sum hours for every task
-                                     ; after this we have sequence of (task duration)
-                                     (map-second sum-hours)
-                                     ; sort by duration in reverse order
-                                     (sort-by second #(compare %2 %1)))
-                    total-time  (total-duration tasks)
-                    tasks-total (->> tasks
-                                     (cons ["total" total-time])
-                                     (map (partial calculate-percents total-time)))]
+              (let [task-duration-pairs (->> entries
+                                             ; returns sequence of (task entries)
+                                             group-by-task
+                                             ; returns sequence of (task duration)
+                                             (map-second calculate-entries-total-duration)
+                                             ; sort by duration in reverse order
+                                             (sort-by second #(compare %2 %1)))
+                    total-time          (sum-durations (map second task-duration-pairs))
+                    tasks-total         (->> task-duration-pairs
+                                             (cons ["total" total-time])
+                                             (map (partial calculate-percents total-time)))]
                 [month tasks-total])))
        (sort-by first)))
 
