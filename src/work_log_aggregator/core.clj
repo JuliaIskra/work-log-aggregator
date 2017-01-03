@@ -28,8 +28,7 @@
 
 (defn entry-day
   [^Entry entry]
-  ; todo parse to string?
-  (.toDateMidnight (:start-datetime entry)))
+  (f/unparse (f/formatters :date) (.toDateMidnight (:start-datetime entry))))
 
 (defn entry-month
   [^Entry entry]
@@ -162,8 +161,7 @@
   (->> aggregated-entries
        (map
          (fn [[day ff entries]]
-           (concat [(f/unparse (f/formatters :date) day)
-                    (format-ff ff)]
+           (concat [day (format-ff ff)]
                    (map format-task-duration-with-ff entries))))
        (interpose "")
        flatten))
