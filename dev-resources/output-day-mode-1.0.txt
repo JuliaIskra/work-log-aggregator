@@ -1,35 +1,31 @@
 2016-07-28
-FF = 44%
-total - 3 h 32 m (8 h)
-support app fix - 1 h 44 m (3 h 55 m)
-teams breakfast - 1 h (2 h 15 m)
-today, timezones - 33 m (1 h 14 m)
-stand-up - 15 m (33 m)
+total (3 h 32 m)
+support app fix (1 h 44 m)
+teams breakfast (1 h)
+today, timezones (33 m)
+stand-up (15 m)
 
 2016-07-29
-FF = 80%
-total - 6 h 27 m (8 h)
-move task in section today - 4 h 20 m (5 h 22 m)
-stand-up - 50 m (1 h 2 m)
-teams breakfast - 40 m (49 m)
-mail - 37 m (45 m)
+total (6 h 27 m)
+move task in section today (4 h 20 m)
+stand-up (50 m)
+teams breakfast (40 m)
+mail (37 m)
 
 2016-08-01
-FF = 75%
-total - 6 h 3 m (8 h)
-move task in section today - 3 h (3 h 58 m)
-teams breakfast - 1 h 8 m (1 h 29 m)
-registration via third-party resources - 52 m (1 h 8 m)
-stand-up - 42 m (55 m)
-mail - 21 m (27 m)
+total (6 h 3 m)
+move task in section today (3 h)
+teams breakfast (1 h 8 m)
+registration via third-party resources (52 m)
+stand-up (42 m)
+mail (21 m)
 
 2016-08-02
-FF = 79%
-total - 6 h 21 m (8 h)
-mail - 1 h 40 m (2 h 5 m)
-move task in section today - 1 h 17 m (1 h 37 m)
-global orientation for newcomers - 1 h 15 m (1 h 34 m)
-teams breakfast - 1 h (1 h 15 m)
-stand-up - 44 m (55 m)
-registration via third-party resources - 16 m (20 m)
-report - 9 m (11 m)
+total (6 h 21 m)
+mail (1 h 40 m)
+move task in section today (1 h 17 m)
+global orientation for newcomers (1 h 15 m)
+teams breakfast (1 h)
+stand-up (44 m)
+registration via third-party resources (16 m)
+report (9 m)

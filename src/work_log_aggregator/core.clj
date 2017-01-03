@@ -25,6 +25,10 @@
       (.appendSuffix " m")
       .toFormatter))
 
+(def modes
+  {"d" :day
+   "m" :month})
+
 
 (defn get-entry-day
   [^Entry entry]
@@ -51,34 +55,21 @@
   [entries]
   (sum-durations (map calculate-entry-duration entries)))
 
-; todo try to merge functions aggregate-by-*-task
-(defn aggregate-by-date-task
-  [entries]
-  (->> entries
-       (group-by get-entry-day)
-       (map (fn [[day entries]]
-              (let [task-duration-pairs            (->> entries
-                                                        ; returns sequence of (task entries)
-                                                        group-by-task
-                                                        ; returns sequence of (task duration)
-                                                        (map-second calculate-entries-total-duration)
-                                                        ; sort by duration in reverse order
-                                                        (sort-by second #(compare %2 %1)))
-                    total-time                     (sum-durations (map second task-duration-pairs))
-                    task-duration-pairs-with-total (cons ["total" total-time] task-duration-pairs)]
-                [day task-duration-pairs-with-total])))
-       (sort-by first)))
-
 (defn calculate-percents
   [total-time [task duration]]
   [task duration (/ (.getStandardMinutes duration)
                     (.getStandardMinutes total-time))])
 
-(defn aggregate-by-month-task
-  [entries]
+(defn group-by-period
+  [mode entries]
+  (cond (= mode :day) (group-by get-entry-day entries)
+        (= mode :month) (group-by get-entry-month entries)))
+
+(defn aggregate-by-period
+  [mode entries]
   (->> entries
-       (group-by get-entry-month)
-       (map (fn [[month entries]]
+       (group-by-period mode)
+       (map (fn [[period entries]]
               (let [task-duration-pairs            (->> entries
                                                         ; returns sequence of (task entries)
                                                         group-by-task
@@ -90,14 +81,8 @@
                     task-duration-pairs-with-total (->> task-duration-pairs
                                                         (cons ["total" total-time])
                                                         (map (partial calculate-percents total-time)))]
-                [month task-duration-pairs-with-total])))
+                [period task-duration-pairs-with-total])))
        (sort-by first)))
-
-(defn aggregate-by
-  [mode entries]
-  (cond (= mode "d") (aggregate-by-date-task entries)
-        (= mode "m") (aggregate-by-month-task entries)
-        :else (throw (RuntimeException. (str "Unknown mode: " mode)))))
 
 
 (defn parse-date
@@ -125,39 +110,26 @@
 
 (defn format-task-duration
   [[task ^Duration duration]]
-  (str task " - " (.print formatter (.toPeriod duration))))
+  (str task " (" (.print formatter (.toPeriod duration)) ")"))
 
-(defn format-task-duration-with-percents
+(defn format-task-duration-percents
   [[task ^Duration duration percents]]
-  (str (int (* percents 100)) "% - " task " (" (.print formatter (.toPeriod duration)) ")"))
+  (str (int (* percents 100)) "% - " (format-task-duration [task duration])))
 
-; todo try to merge these two functions
-(defn format-day-tasks
-  [aggregated-entries]
-  (->> aggregated-entries
+(defn format-records-for-period
+  [mode records]
+  (cond (= mode :day) (format-task-duration records)
+        (= mode :month) (format-task-duration-percents records)))
+
+(defn format-output-records
+  [mode output-records]
+  (->> output-records
        (map
-         (fn [[day entries]]
-           (concat [day]
-                   (map format-task-duration entries))))
+         (fn [[period records]]
+           (concat [period]
+                   (map (partial format-records-for-period mode) records))))
        (interpose "")
        flatten))
-
-(defn format-month-tasks
-  [aggregated-entries]
-  (->> aggregated-entries
-       (map
-         (fn [[month entries]]
-           (concat [month]
-                   (map format-task-duration-with-percents entries))))
-       (interpose "")
-       flatten))
-
-; todo check mode once
-(defn format-aggregated-entries
-  [mode aggregated-entries]
-  (cond (= mode "d") (format-day-tasks aggregated-entries)
-        (= mode "m") (format-month-tasks aggregated-entries)
-        :else (throw (RuntimeException. (str "Unknown mode: " mode)))))
 
 (defn print-seq
   [coll]
@@ -174,11 +146,13 @@
 (defn -main
   "Takes file with filename with input data to parse in mode (d -- days, m -- months)
   and returns data for the last count days/months"
-  ([filename mode & [count]]
-   (with-open [reader (clojure.java.io/reader filename)]
-     (->> reader
-          read-entries
-          (aggregate-by mode)
-          (take-last-if-specified count)
-          (format-aggregated-entries mode)
-          print-seq))))
+  [filename input-mode & [count]]
+  (let [mode (get modes input-mode)]
+    (if (nil? mode) (throw (RuntimeException. (str ("Unknown mode: " input-mode)))))
+    (with-open [reader (clojure.java.io/reader filename)]
+      (->> reader
+           read-entries
+           (aggregate-by-period mode)
+           (take-last-if-specified count)
+           (format-output-records mode)
+           print-seq))))

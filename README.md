@@ -2,11 +2,8 @@
 
 Parses work log and generates output in two modes.
 
-In day mode you can see how much time did you spend doing tasks during every day. Time is shown in absolute hours 
-and in "focus factor hours". Focus factor hours are calculated based on the assumption that the work day is 8 hours.
-Also you can see focus factor in percent for each day.
-
-In month mode you can see how much time (in hours and in percents) did you spent doing your tasks during every month.
+In day mode you can see how much time did you spend doing tasks during every day.
+In month mode you can see how much time (in hours and in percents) did you spend doing your tasks during every month.
 
 Example files are in `dev-resources`.
 
@@ -15,12 +12,11 @@ Example files are in `dev-resources`.
 For day mode:
 
     2016-07-29
-    FF = 80%
-    total - 6 h 27 m (8 h)
-    move task in section today - 4 h 20 m (5 h 22 m)
-    stand-up - 50 m (1 h 2 m)
-    teams breakfast - 40 m (49 m)
-    mail - 37 m (45 m)
+    total (6 h 27 m)
+    move task in section today (4 h 20 m)
+    stand-up (50 m)
+    teams breakfast (40 m)
+    mail (37 m)
 
 For month mode:
 
@@ -47,7 +43,7 @@ For month mode:
 4. Or you can create a standalone jar and run it as a java application:
 
         lein uberjar
-        java -jar target/uberjar/work_log_aggregator-0.3.0-standalone.jar input-filename mode [count]
+        java -jar target/uberjar/work_log_aggregator-*-standalone.jar input-filename mode [count]
 
 ## Examples
 
